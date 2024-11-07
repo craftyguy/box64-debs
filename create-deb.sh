@@ -33,7 +33,7 @@ echo "Box64 is not the latest version, compiling now."
 echo $commit > $DIRECTORY/commit.txt
 echo "Wrote commit to commit.txt file for use during the next compilation."
 
-targets=(ARM64 ANDROID RPI4ARM64 RPI3ARM64 TEGRAX1 RK3399 RK3588 RPI5ARM64 RPI5ARM64PS16K LX2160A TEGRA_T194 M1)
+targets=(ARM64)
 
 for target in ${targets[@]}; do
   echo "Building $target"
@@ -85,16 +85,7 @@ for target in ${targets[@]}; do
   fi
 
   cd $DIRECTORY
-  mv box64/build/*.deb ./debian/ || error "Failed to move deb to debian folder."
+  mkdir -p $DIRECTORY/debz
+  mv box64/build/*.deb $DIRECTORY/debz || error "Failed to move deb to debian folder."
 
 done
-
-# only keep last 4 debs for each target
-# keeps github pages builds fast and below 1GB suggested limit
-# thanks to gman from pi-apps
-cd $DIRECTORY
-ls ./debian/box64*.deb | sort -t '+' -k 2 | head -n -24 | xargs -r rm
-
-rm -rf $DIRECTORY/box64
-
-echo "Script complete."
